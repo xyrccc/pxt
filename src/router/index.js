@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import ShipMian from '@/components/ShipMian'
+import Mian from '@/components/Mian'
 import Table1 from "../components/Table/Table1";
 import Table2 from "../components/Table/Table2";
 
@@ -9,8 +9,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'ShipMian',
-      component: ShipMian,
+      name: 'Mian',
+      component: Mian,
       children:[
         {
           path: '/Table/Table1',
