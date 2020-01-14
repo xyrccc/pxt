@@ -1,71 +1,139 @@
 <template>
-  <div>
-
+  <div class="table_box">
     <div class="title" style="font-size: 23px;padding-left: 20px; margin-bottom: 20px;float:left">
       <span class="el-icon-s-order"></span>
-      表格1
+      表格1（搬砖数据）
     </div>
-    <br>
-    <el-card style="margin-top:50px">
 
-      <br>
+    <el-table :data="data" style="width: 100%;" stripe height="460">
 
-      <el-table ref="multipleTable" :data="handleList.slice((currentPage-1)*pageSize,currentPage*pageSize)" tooltip-effect="dark" style="width: 100%">
-        <el-table-column  type="index" label="序号" width="50"></el-table-column>
-        <el-table-column  prop="" label="币种"></el-table-column>
-        <el-table-column  prop="" label="初始"></el-table-column>
-        <el-table-column  prop="" label="公元2019年12月22日"></el-table-column>
-        <el-table-column  prop="" label="12月27日-配平后"></el-table-column>
-        <el-table-column  prop="" label="公元2020年1月7日"></el-table-column>
-        <el-table-column  prop="" label="01月07日-配平后"></el-table-column>
-      </el-table>
-      <div style="margin-top:20px">
-        <el-pagination
-          small
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 50, 100]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="handleList.length">
-        </el-pagination>
-      </div>
+      <el-table-column prop="exchange" label="搬砖平台" align='center'
+                       :filters="[{ text: 'abit', value: 'abit' }
+                       ,{ text: 'ceo', value: 'ceo' }
+                       ,{ text: 'binance', value: 'binance' }
+                       ,{ text: 'bkex', value: 'bkex' }]"
+                       :filter-method="filterExchange"
+                       filter-placement="bottom-end">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.exchange}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.exchange"></el-input>
+        </template>
+      </el-table-column>
 
-    </el-card>
+      <el-table-column prop="symbol" label="币种" align='center'
+                       :filters="[{ text: 'wdc_usdt', value: 'wdc_usdt' }
+                       ,{ text: 'wdc_qc', value: 'wdc_qc' }
+                       ,{ text: 'usdt_qc', value: 'usdt_qc' }
+                       ,{ text: 'btc_usdt', value: 'btc_usdt' }
+                       ,{ text: 'eth_usdt', value: 'eth_usdt' }
+                       ,{ text: 'eos_usdt', value: 'eos_usdt' }
+                       ,{ text: 'eth_btc', value: 'eos_btc' }
+                       ,{ text: 'eos_btc', value: 'eos_btc' }
+                       ,{ text: 'at_usdt', value: 'at_usdt' }]"
+                       :filter-method="filterSymbol"
+                       filter-placement="bottom-end">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.symbol}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.symbol"></el-input>
+        </template>
+      </el-table-column>
 
-    <router-view></router-view>
+      <el-table-column prop="maxNum" label="单次最大数量" align='center'>
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.maxNum}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.maxNum"></el-input>
+        </template>
+      </el-table-column>
 
+      <el-table-column prop="minNum" label="单次最小数量" align='center'>
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.minNum}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.minNum"></el-input>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="profit" label="下单利润率" align='center'>
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.profit}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.profit"></el-input>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="priceDecimal" label="价格精度" align='center'>
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.priceDecimal}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.priceDecimal"></el-input>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="amountDecimal" label="数量精度" align='center'>
+        <template slot-scope="scope">
+          <span v-if="!scope.row.isEgdit">{{scope.row.amountDecimal}}</span>
+          <el-input v-if="scope.row.isEgdit" v-model="scope.row.amountDecimal"></el-input>
+        </template>
+      </el-table-column>
+
+      <el-table-column fixed="right" label="操作" align='center'>
+        <template slot-scope="scope">
+          <el-button v-if="!scope.row.isEgdit" type="primary" size="small" @click='edit(scope.$index,scope.row)' icon="el-icon-edit" circle></el-button>
+          <el-button v-if="scope.row.isEgdit" type="success" size="small" @click='editSuccess(scope.$index,scope.row)' icon="el-icon-check" circle></el-button>
+        </template>
+      </el-table-column>
+
+    </el-table>
 
   </div>
 </template>
-
 <script>
-
     export default {
-        data()
-        {
-            return{
-                handleList: [],
-                // 当前页
-                currentPage: 1,
-                // 每页多少条
-                pageSize: 10,
+        data() {
+            return {
+                code:'',
+                message:'',
+                data:[],
             }
         },
+
+        mounted(){
+            this.$axios
+                .get('/api/data/getBanzhuanDataInfo')
+                .then((res) => {
+                    let jsonObj=res.data;
+                    console.log(jsonObj)
+                    this.code=jsonObj.code;
+                    this.message=jsonObj.message;
+                    if(this.code==200){
+                        this.data=jsonObj.data;
+                    }
+                    else {
+                        this.$alert(this.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+
         methods: {
-            // 每页多少条
-            handleSizeChange(val) {
-                this.pageSize = val;
-                this.currentPage = 1;
+            //编辑数据
+            edit(index, row) {
+                this.$set(row, 'isEgdit', true)
             },
-            // 当前页
-            handleCurrentChange(val) {
-                this.currentPage = val;
+            //编辑成功
+            editSuccess(index, row) {
+                this.$set(row, 'isEgdit', false)
+                console.log(index)
+                console.log(row)
             },
-
+            //筛选
+            filterExchange(value,row){
+                return row.exchange === value;
+            },
+            filterSymbol(value,row){
+                return row.symbol === value;
+            }
         }
+
     }
+
 </script>
-
-

@@ -16,8 +16,9 @@
               <span>表格选择</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/Table/Table1">表格1</el-menu-item>
-              <el-menu-item index="/Table/Table2">表格2</el-menu-item>
+              <el-menu-item index="/Table/Table1">表格1（搬砖数据）</el-menu-item>
+              <el-menu-item index="/Table/Table2">表格2（所有资产）</el-menu-item>
+              <el-menu-item index="/Table/Table3">表格3（币种数据）</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
