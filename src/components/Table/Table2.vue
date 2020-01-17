@@ -5,7 +5,7 @@
       表格2
     </div>
 
-    <el-table :data="data" style="width: 100%;" stripe height="360">
+    <el-table :data="data" style="width: 100%;" stripe height="460">
 
       <el-table-column prop="exchangeName" label="交易所名称" align='center'
                        :filters="[{ text: 'abit', value: 'abit' }
@@ -82,7 +82,6 @@
       </el-table-column>
 
     </el-table>
-    <br>{{data}}
 
   </div>
 </template>
@@ -99,40 +98,23 @@
         },
 
         mounted(){
-            let jsonObj={
-                "code": 200,
-                "message": "OK",
-                "data": [
-                    {
-                        "id": 48,
-                        "exchangeName": "abit",
-                        "symbol": "wdc_usdt",
-                        "asset": "USDT",
-                        "all": 299999.99999999,
-                        "available": 292106.43078544,
-                        "frozen": 7893.56921455
-                    },
-                    {
-                        "id": 49,
-                        "exchangeName": "abit",
-                        "symbol": "wdc_usdt",
-                        "asset": "WDC",
-                        "all": 2000000.00003263,
-                        "available": 1600259.86815647,
-                        "frozen": 399740.13187616
+            this.$axios
+                .get('/api/data/getAccountBalanceInfo')
+                .then((res) => {
+                    let jsonObj=res.data;
+                    console.log(jsonObj)
+                    this.code=jsonObj.code;
+                    this.message=jsonObj.message;
+                    if(this.code==200){
+                        this.data=jsonObj.data;
                     }
-                ],
-                "total": 2,
-                "size": 2
-            }
-            this.code=jsonObj.code;
-            this.message=jsonObj.message;
-            if(this.code==200){
-                this.data=jsonObj.data;
-            }
-            else {
-                this.$alert(this.message);
-            }
+                    else {
+                        this.$alert(this.message);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
 
         methods: {
