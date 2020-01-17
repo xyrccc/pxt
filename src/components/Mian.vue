@@ -8,7 +8,7 @@
       ></el-button>
 
       <el-drawer :visible.sync="table" direction="ltr" size="20%">
-        <h2>各类币值走势分析表</h2>
+        <h2>数据统计</h2>
         <el-menu router :default-active="$route.path">
           <el-submenu index="1">
             <template slot="title">
@@ -27,7 +27,7 @@
       <el-container>
         <el-header style="width:100vw" class="icon">
           <div style="font-size: 33px">
-            各类币值走势分析表
+            数据统计
           </div>
         </el-header>
         <el-main style="width:100vw">

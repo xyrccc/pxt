@@ -123,8 +123,14 @@
             //编辑成功
             editSuccess(index, row) {
                 this.$set(row, 'isEgdit', false)
-                console.log(index)
-                console.log(row)
+                this.$axios
+                    .post('/api/data/editSymbolData',row)
+                    .then((res) => {
+                        console.log(res.data)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
             //筛选
             filterSymbol(value,row){
